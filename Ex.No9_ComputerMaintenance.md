@@ -1,33 +1,87 @@
-# Ex.No: 9  Logic Programming –  Computer Maintenance Expert System
+# Ex.No: 12  Planning –  Monkey Banana Problem
 ### DATE:                                                                            
-### REGISTER NUMBER : 
+### REGISTER NUMBER : 212222220015
 ### AIM: 
-Write a Prolog program to build a computer maintenance expert system.
+To find the sequence of plan for Monkey Banana problem using PDDL Editor.
 ###  Algorithm:
-1. Start the program.
-2. Write the rules for each fault in computer.
-3. If system have printing problem, missing dots and no uniform printing then system fault on printer head.
-4. If system have not printing, missing dots and spread inks then system fault on ribbon
-5. If system have not printing, paper jam and out of paper then system fault on paper stuck in printer
-6. Similarly define rules for all faults.
-7. Define facts for system problems.
-8. Find the fault of computer by passing query to system.
-     
+Step 1:  Start the program <br> 
+Step 2 : Create a domain for Monkey Banana Problem. <br> 
+Step 3:  Create a domain by specifying predicates. <br> 
+Step 4: Specify the actions GOTO, CLIMB, PUSH-BOX, GET-KNIFE, GRAB-BANANAS in Monkey Banana problem.<br>  
+Step 5:   Define a problem for Monkey Banana problem.<br> 
+Step 6:  Obtain the plan for given problem.<br> 
+Step 7: Stop the program.<br> 
 ### Program:
+```
+(define (domain monkey)
+ (:requirements :strips)
+ (:constants monkey box knife bananas glass waterfountain)
+ (:predicates (location ?x)
+ (on-floor)
+ (at ?m ?x)
+ (hasknife)
+ (onbox ?x)
+ (hasbananas)
+ (hasglass)
+ (haswater))
+ ;; movement and climbing
+ (:action GO-TO
+ :parameters (?x ?y)
+ :precondition (and (location ?x) (location ?y) (on-floor) (at monkey ?y)) :effect (and (at monkey ?x) (not (at monkey ?y))))
+ (:action CLIMB
+ :parameters (?x)
+ :precondition (and (location ?x) (at box ?x) (at monkey ?x))
+ :effect (and (onbox ?x) (not (on-floor))))
+ (:action PUSH-BOX
+ :parameters (?x ?y)
+ :precondition (and (location ?x) (location ?y) (at box ?y) (at monkey ?y)  (on-floor))
+ :effect (and (at monkey ?x) (not (at monkey ?y))
+ (at box ?x) (not (at box ?y))))
+ ;; getting bananas
+ (:action GET-KNIFE
+ :parameters (?y)
+ :precondition (and (location ?y) (at knife ?y) (at monkey ?y))
+ :effect (and (hasknife) (not (at knife ?y))))
+ (:action GRAB-BANANAS
+ :parameters (?y)
+ :precondition (and (location ?y) (hasknife)
+ (at bananas ?y) (onbox ?y))
+ :effect (hasbananas))
+ ;; getting water
+ (:action PICKGLASS
+ :parameters (?y)
+ :precondition (and (location ?y) (at glass ?y) (at monkey ?y))
+ :effect (and (hasglass) (not (at glass ?y))))
+ (:action GETWATER
+ :parameters (?y)
+ :precondition (and (location ?y) (hasglass)
+ (at waterfountain ?y)
+ (at monkey ?y)
+ (onbox ?y))
+ :effect (haswater)))
+```
+### Input 
+```
+(define (problem pb1)
+ (:domain monkey)
+ (:objects p1 p2 p3 p4 bananas monkey box knife)
+ (:init (location p1)
+(location p2)
+(location p3)
+(location p4)
+ (at monkey p1)
+(on-floor)
+(at box p2)
+(at bananas p3)
+ (at knife p4)
+)
+ (:goal (and (hasbananas)))
+)
+```
 
-
-
-
-
-
-
-
-
-
-
-### Output:
-
+### Output/Plan:
+![image](https://github.com/user-attachments/assets/6b4c6f39-566a-4ccc-b602-5361a8b95ebe)
 
 
 ### Result:
-Thus the simple omputer maintenance expert system was built sucessfully.
+Thus the plan was found for the initial and goal state of given problem.
